@@ -28,14 +28,14 @@ public class DialogHost : ContentControl {
     /// Gets the name for the content cover part in the control template.
     /// </summary>
     public const string ContentCoverName = "PART_ContentCover";
-    
+
     /// <summary>
     /// Gets the name for the root part in the control template.
     /// </summary>
     public const string DialogHostRoot = "PART_DialogHostRoot";
-    
+
     private const double DefaultBlurRadius = 16.0;
-    
+
     /// <summary>
     /// Tracks all loaded instances of DialogHost.
     /// </summary>
@@ -53,9 +53,9 @@ public class DialogHost : ContentControl {
     /// <summary>
     /// Identified the <see cref="IsMultipleDialogsEnabled"/>
     /// </summary>
-    public static readonly DirectProperty<DialogHost, bool> IsMultipleDialogsEnabledProperty = 
-        AvaloniaProperty.RegisterDirect<DialogHost, bool>(nameof(IsMultipleDialogsEnabled), 
-            o => o.IsMultipleDialogsEnabled, 
+    public static readonly DirectProperty<DialogHost, bool> IsMultipleDialogsEnabledProperty =
+        AvaloniaProperty.RegisterDirect<DialogHost, bool>(nameof(IsMultipleDialogsEnabled),
+            o => o.IsMultipleDialogsEnabled,
             (o, v) => o.IsMultipleDialogsEnabled = v);
 
     /// <summary>
@@ -97,7 +97,7 @@ public class DialogHost : ContentControl {
     /// </summary>
     public static readonly RoutedEvent<DialogOpenedEventArgs> DialogOpenedEvent =
         RoutedEvent.Register<DialogHost, DialogOpenedEventArgs>(nameof(DialogOpened), RoutingStrategies.Bubble);
-    
+
     /// <summary>
     /// Identifies the <see cref="DialogClosing"/> routed event.
     /// </summary>
@@ -191,15 +191,15 @@ public class DialogHost : ContentControl {
     /// <summary>
     /// Identifies the <see cref="BlurBackground"/> property.
     /// </summary>
-    public static readonly StyledProperty<bool> BlurBackgroundProperty 
+    public static readonly StyledProperty<bool> BlurBackgroundProperty
         = AvaloniaProperty.Register<DialogHost, bool>(nameof(BlurBackground));
 
     /// <summary>
     /// Identifies the <see cref="BlurBackgroundRadius"/> property.
     /// </summary>
-    public static readonly StyledProperty<double> BlurBackgroundRadiusProperty 
+    public static readonly StyledProperty<double> BlurBackgroundRadiusProperty
         = AvaloniaProperty.Register<DialogHost, double>(nameof(BlurBackgroundRadius), DefaultBlurRadius);
-    
+
     private bool _isMultipleDialogsEnabled;
 
     private ICommand _closeDialogCommand;
@@ -276,7 +276,7 @@ public class DialogHost : ContentControl {
         get => _identifier;
         set => SetAndRaise(IdentifierProperty, ref _identifier, value);
     }
-    
+
     /// <summary>
     /// Gets or sets is opening multiple dialogs at the same time enabled 
     /// </summary>
@@ -323,8 +323,7 @@ public class DialogHost : ContentControl {
     public bool IsOpen {
         get => _isOpen;
         set {
-            if (SetAndRaise(IsOpenProperty, ref _isOpen, value))
-            {
+            if (SetAndRaise(IsOpenProperty, ref _isOpen, value)) {
                 IsOpenPropertyChangedCallback(value);
             }
         }
@@ -361,7 +360,7 @@ public class DialogHost : ContentControl {
         get => _popupPositioner;
         set => SetAndRaise(PopupPositionerProperty, ref _popupPositioner, value);
     }
-    
+
     /// <summary>
     /// Gets or sets whether to enable background blur when dialog is opened
     /// </summary>
@@ -369,7 +368,7 @@ public class DialogHost : ContentControl {
         get => GetValue(BlurBackgroundProperty);
         set => SetValue(BlurBackgroundProperty, value);
     }
-    
+
     /// <summary>
     /// Gets or sets radius of background blur when <see cref="BlurBackground"/> is enabled
     /// </summary>
@@ -517,7 +516,8 @@ public class DialogHost : ContentControl {
     public static Task<object?> Show(object? content, DialogHost instance, DialogOpenedEventHandler? openedEventHandler,
         DialogClosingEventHandler? closingEventHandler) {
         //if (content is null) throw new ArgumentNullException(nameof(content));
-        if (instance is null) throw new ArgumentNullException(nameof(instance));
+        if (instance is null)
+            throw new ArgumentNullException(nameof(instance));
         return instance.ShowCore(content, openedEventHandler, closingEventHandler);
     }
 
@@ -679,7 +679,7 @@ public class DialogHost : ContentControl {
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e) {
         _templateDisposables?.Dispose();
 
-        Root = e.NameScope.Find<Panel>(DialogHostRoot) 
+        Root = e.NameScope.Find<Panel>(DialogHostRoot)
                 ?? throw new InvalidOperationException($"No Panel with name {DialogHostRoot} found. " +
                                                        $"Did you add the styles as stated in getting started?");
 
@@ -756,7 +756,7 @@ public class DialogHost : ContentControl {
             PopupPositioner = PopupPositioner
         };
 
-        _disposeList.AddDispose(host, 
+        _disposeList.AddDispose(host,
             host.Bind(DisableOpeningAnimationProperty, this.GetBindingObservable(DisableOpeningAnimationProperty)),
             content is null ? host.Bind(ContentProperty, this.GetBindingObservable(DialogContentProperty)) : EmptyDisposable.Instance,
             host.Bind(ContentTemplateProperty, this.GetBindingObservable(DialogContentTemplateProperty)),
@@ -779,6 +779,7 @@ public class DialogHost : ContentControl {
         var session = host.Session;
         if (!session.IsEnded) {
             session.Close(session.CloseParameter);
+            return;
         }
 
         //DialogSession.Close may attempt to cancel the closing of the dialog.
@@ -842,27 +843,31 @@ public class DialogHost : ContentControl {
     protected virtual void OnDialogClosing(DialogClosingEventArgs eventArgs) => RaiseEvent(eventArgs);
 
     internal void InternalClose(object? parameter) {
-        var currentSession = CurrentSession ?? throw new InvalidOperationException($"{nameof(DialogHost)} does not have a current session");
+        var session = CurrentSession ?? throw new InvalidOperationException($"{nameof(DialogHost)} does not have a current session");
 
-        currentSession.CloseParameter = parameter;
-        currentSession.IsEnded = true;
+        InternalClose(session, parameter);
+    }
+
+    internal void InternalClose(DialogSession session, object? parameter) {
+        session.CloseParameter = parameter;
+        session.IsEnded = true;
 
         //multiple ways of calling back that the dialog is closing:
         // * routed event
         // * straight forward IsOpen dependency property 
         // * handler provided to the async show method
-        var dialogClosingEventArgs = new DialogClosingEventArgs(currentSession, DialogClosingEvent);
+        var dialogClosingEventArgs = new DialogClosingEventArgs(session, DialogClosingEvent);
         OnDialogClosing(dialogClosingEventArgs);
         DialogClosingCallback?.Invoke(this, dialogClosingEventArgs);
-        CurrentSession?.ShowClosing(this, dialogClosingEventArgs);
+        session.ShowClosing(this, dialogClosingEventArgs);
 
         if (dialogClosingEventArgs.IsCancelled) {
-            currentSession.IsEnded = false;
+            session.IsEnded = false;
             return;
         }
 
         //IsOpen = false;
-        RemoveHost(currentSession.Host);
+        RemoveHost(session.Host);
     }
 
     /// <inheritdoc />

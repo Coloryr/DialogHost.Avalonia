@@ -26,7 +26,7 @@ public class DialogSession {
     /// Client code cannot set this directly, this is internally managed.  To end the dialog session use <see cref="Close()"/>.
     /// </remarks>
     public bool IsEnded { get; internal set; }
-        
+
     /// <summary>
     /// The parameter passed to the <see cref="DialogHost.CloseDialogCommand" /> and return by <see cref="DialogHost.Show(object)"/>
     /// </summary>
@@ -54,11 +54,11 @@ public class DialogSession {
     /// Closes the dialog.
     /// </summary>
     /// <exception cref="InvalidOperationException">Thrown if the dialog session has ended, or a close operation is currently in progress.</exception>
-    public void Close()
-    {
-        if (IsEnded) throw new InvalidOperationException("Dialog session has ended.");
+    public void Close() {
+        if (IsEnded)
+            throw new InvalidOperationException("Dialog session has ended.");
 
-        _owner.InternalClose(null);
+        _owner.InternalClose(this, null);
     }
 
     /// <summary>
@@ -66,11 +66,11 @@ public class DialogSession {
     /// </summary>
     /// <param name="parameter">Result parameter which will be returned in <see cref="DialogClosingEventArgs.Parameter"/> or from <see cref="DialogHost.Show(object)"/> method.</param>
     /// <exception cref="InvalidOperationException">Thrown if the dialog session has ended, or a close operation is currently in progress.</exception>
-    public void Close(object? parameter)
-    {
-        if (IsEnded) throw new InvalidOperationException("Dialog session has ended.");
+    public void Close(object? parameter) {
+        if (IsEnded)
+            throw new InvalidOperationException("Dialog session has ended.");
 
-        _owner.InternalClose(parameter);
+        _owner.InternalClose(this, parameter);
     }
 
     internal void ShowOpened(object obj, DialogOpenedEventArgs args) {

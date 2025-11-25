@@ -1,136 +1,163 @@
-<Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:vm="using:DialogHostDemo.ViewModels"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:views="clr-namespace:DialogHostDemo.Views"
-        xmlns:models="clr-namespace:DialogHostDemo.Models"
-        xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
-        mc:Ignorable="d"
-        x:Class="DialogHostDemo.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        Width="1024" Height="420"
-        MinWidth="1024" MinHeight="420"
-        Title="DialogHost.Demo">
-  <Design.DataContext>
-    <vm:MainWindowViewModel />
-  </Design.DataContext>
-  
-  <Window.DataTemplates>
-    <DataTemplate DataType="models:Sample3Model">
-      <StackPanel>
-        <TextBlock TextAlignment="Center">Your lucky number:</TextBlock>
-        <TextBlock Classes="Body1"
-                   TextAlignment="Center"
-                   Text="{Binding Number}" />
-        <Button Margin="0 8 0 0"
-                Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHostAvalonia:DialogHost}, Path=CloseDialogCommand}">
-          THANKS, CLOSE
-        </Button>
-      </StackPanel>
-    </DataTemplate>
-  </Window.DataTemplates>
-  <Window.Resources>
-    <StackPanel x:Key="Sample2View">
-      <TextBlock>It opened without animation</TextBlock>
-      <Button Margin="0 16 0 0"
-              Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHostAvalonia:DialogHost}, Path=CloseDialogCommand}">
-        CLOSE
-      </Button>
-    </StackPanel>
-    <StackPanel x:Key="Sample3View">
-      <ProgressBar Classes="Circle" IsIndeterminate="True" />
-      <Button Margin="0 16 0 0"
-              Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHostAvalonia:DialogHost}, Path=CloseDialogCommand}">
-        CLOSE
-      </Button>
-    </StackPanel>
-    <StackPanel x:Key="Sample4View">
-      <TextBlock>Everything blurred</TextBlock>
-      <Button Margin="0 16 0 0"
-              Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHostAvalonia:DialogHost}, Path=CloseDialogCommand}">
-        CLOSE
-      </Button>
-    </StackPanel>
-  </Window.Resources>
-  
-  <dialogHostAvalonia:DialogHost Identifier="MainDialogHost"
-                                 DialogMargin="16"
-                                 dialogHostAvalonia:DialogHostStyle.CornerRadius="8">
-    <Grid Margin="8"
-          ColumnDefinitions="* 8 * 8 * 8 *" RowDefinitions="Auto 8 *"
-          VerticalAlignment="Center" HorizontalAlignment="Stretch">
-      <TextBlock Grid.Column="0" Grid.Row="0"
-                 TextWrapping="Wrap">
-        SAMPLE 1: Localized dialog encapsulating specific content, launched from a routed command, response handled in code-behind.
-      </TextBlock>
-      <Border Grid.Column="0" Grid.Row="2"
-              MinHeight="250" MinWidth="250"
-              BorderThickness="1" BorderBrush="Black">
-        <views:FruitBowl />
-      </Border>
+<Window
+    x:Class="DialogHostDemo.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dialogHostAvalonia="clr-namespace:DialogHostAvalonia;assembly=DialogHost.Avalonia"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:DialogHostDemo.Models"
+    xmlns:views="clr-namespace:DialogHostDemo.Views"
+    xmlns:vm="using:DialogHostDemo.ViewModels"
+    Title="DialogHost.Demo"
+    Width="1024"
+    Height="420"
+    MinWidth="1024"
+    MinHeight="420"
+    Icon="/Assets/avalonia-logo.ico"
+    mc:Ignorable="d">
+    <Design.DataContext>
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
 
-      <TextBlock Grid.Column="2" Grid.Row="0"
-                 TextWrapping="Wrap">
-        SAMPLE 2: Dialog without animation.
-      </TextBlock>
-      <Border Grid.Column="2" Grid.Row="2"
-              MinHeight="200" MinWidth="200"
-              BorderThickness="1" BorderBrush="Black">
-        <dialogHostAvalonia:DialogHost Identifier="NoAnimationDialogHost"
-                                       Name="NoAnimationDialogHost"
-                                       IsMultipleDialogsEnabled="True"
-                                       DisableOpeningAnimation="True"
-                                       Classes="disable-content-cover-animations">
-          <Button HorizontalAlignment="Center" VerticalAlignment="Center"
-                  Click="OpenNoAnimationDialog">
-            Open
-          </Button>
-          <dialogHostAvalonia:DialogHost.DialogContent>
+    <Window.DataTemplates>
+        <DataTemplate DataType="models:Sample3Model">
             <StackPanel>
-              <TextBlock>It's dialog content</TextBlock>
-              <Button Margin="0 16 0 0"
-                      Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHostAvalonia:DialogHost}, Path=CloseDialogCommand}">
-                CLOSE
-              </Button>
+                <TextBlock TextAlignment="Center">Your lucky number:</TextBlock>
+                <TextBlock
+                    Classes="Body1"
+                    Text="{Binding Number}"
+                    TextAlignment="Center" />
+                <Button Margin="0,8,0,0" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHostAvalonia:DialogHost}, Path=CloseDialogCommand}">
+                    THANKS, CLOSE
+                </Button>
             </StackPanel>
-          </dialogHostAvalonia:DialogHost.DialogContent>
-        </dialogHostAvalonia:DialogHost>
-      </Border>
+        </DataTemplate>
+    </Window.DataTemplates>
+    <Window.Resources>
+        <StackPanel x:Key="Sample2View">
+            <TextBlock>It opened without animation</TextBlock>
+            <Button Margin="0,16,0,0" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHostAvalonia:DialogHost}, Path=CloseDialogCommand}">
+                CLOSE
+            </Button>
+        </StackPanel>
+        <StackPanel x:Key="Sample3View">
+            <ProgressBar Classes="Circle" IsIndeterminate="True" />
+            <Button Margin="0,16,0,0" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHostAvalonia:DialogHost}, Path=CloseDialogCommand}">
+                CLOSE
+            </Button>
+        </StackPanel>
+        <StackPanel x:Key="Sample4View">
+            <TextBlock>Everything blurred</TextBlock>
+            <Button Margin="0,16,0,0" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHostAvalonia:DialogHost}, Path=CloseDialogCommand}">
+                CLOSE
+            </Button>
+        </StackPanel>
+    </Window.Resources>
 
-      <TextBlock Grid.Column="4" Grid.Row="0"
-                 TextWrapping="Wrap">
-        SAMPLE 3: Top level dialog with custom corner radius, using OpenDialog, passing content via the Parameter. You can pass a view model, provided a corresponding DataTemplate can be found in the scope of the root DialogHost.
-      </TextBlock>
-      <StackPanel Grid.Column="4" Grid.Row="2">
-        <Button Margin="8" Click="OpenNoAnimationDialog">PASS VIEW</Button>
-        <Button Margin="8" Click="OpenDialogWithModel">PASS MODEL</Button>
-        <Button Margin="8" Click="CloseDialogWithModel">PASS CLOSE</Button>
-        <Button Margin="8" Click="OffDialogWithModel">PASS IsOpen=false</Button>
-        <Button Margin="8" Click="OnDialogWithModel">PASS IsOpen=true</Button>
-      </StackPanel>
+    <dialogHostAvalonia:DialogHost
+        dialogHostAvalonia:DialogHostStyle.CornerRadius="8"
+        DialogMargin="16"
+        Identifier="MainDialogHost">
+        <Grid
+            Margin="8"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Center"
+            ColumnDefinitions="* 8 * 8 * 8 *"
+            RowDefinitions="Auto 8 *">
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="0"
+                TextWrapping="Wrap">
+                SAMPLE 1: Localized dialog encapsulating specific content, launched from a routed command, response handled in code-behind.
+            </TextBlock>
+            <Border
+                Grid.Row="2"
+                Grid.Column="0"
+                MinWidth="250"
+                MinHeight="250"
+                BorderBrush="Black"
+                BorderThickness="1">
+                <views:FruitBowl />
+            </Border>
 
-      <TextBlock Grid.Column="6" Grid.Row="0"
-                 TextWrapping="Wrap">
-        SAMPLE 4: Dialog with blur.
-        Blur can be controlled via BlurBackground and BlurBackgroundRadius properties.
-      </TextBlock>
-      <Border Grid.Column="6" Grid.Row="2"
-              MinHeight="200" MinWidth="200"
-              BorderThickness="1" BorderBrush="Black">
-        <dialogHostAvalonia:DialogHost Identifier="BlurDialogHost"
-                                       BlurBackground="True">
-          <Panel>
-            <TextBlock TextWrapping="Wrap" TextAlignment="Justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed metus semper, faucibus erat ac, tincidunt odio. Donec congue nisi purus, non consectetur purus sollicitudin sed. Suspendisse iaculis dictum porttitor. Nulla ex leo, pulvinar venenatis arcu in, luctus efficitur nisl. Mauris non velit quis elit placerat auctor porttitor ac augue. Phasellus ut ipsum enim. Proin interdum aliquam ex sed laoreet. Sed eros nulla, ornare elementum urna vel, fringilla pharetra lorem. Integer hendrerit eros a tortor gravida, in lacinia augue blandit. Donec dignissim dapibus augue vel ultricies. Donec in velit mi. Pellentesque ac lorem vitae magna ullamcorper vehicula.</TextBlock>
-            <Panel HorizontalAlignment="Center" VerticalAlignment="Center"
-                   Background="{DynamicResource SystemRegionBrush}">
-              <Button Click="OpenBlurDialog">
-                Open with blur
-              </Button>
-            </Panel>
-          </Panel>
-        </dialogHostAvalonia:DialogHost>
-      </Border>
-    </Grid>
-  </dialogHostAvalonia:DialogHost>
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="2"
+                TextWrapping="Wrap">
+                SAMPLE 2: Dialog without animation.
+            </TextBlock>
+            <Border
+                Grid.Row="2"
+                Grid.Column="2"
+                MinWidth="200"
+                MinHeight="200"
+                BorderBrush="Black"
+                BorderThickness="1">
+                <dialogHostAvalonia:DialogHost
+                    Name="NoAnimationDialogHost"
+                    Classes="disable-content-cover-animations"
+                    DisableOpeningAnimation="True"
+                    Identifier="NoAnimationDialogHost"
+                    IsMultipleDialogsEnabled="True">
+                    <Button
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Click="OpenNoAnimationDialog">
+                        Open
+                    </Button>
+                    <dialogHostAvalonia:DialogHost.DialogContent>
+                        <StackPanel>
+                            <TextBlock>It's dialog content</TextBlock>
+                            <Button Margin="0,16,0,0" Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=dialogHostAvalonia:DialogHost}, Path=CloseDialogCommand}">
+                                CLOSE
+                            </Button>
+                        </StackPanel>
+                    </dialogHostAvalonia:DialogHost.DialogContent>
+                </dialogHostAvalonia:DialogHost>
+            </Border>
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="4"
+                TextWrapping="Wrap">
+                SAMPLE 3: Top level dialog with custom corner radius, using OpenDialog, passing content via the Parameter. You can pass a view model, provided a corresponding DataTemplate can be found in the scope of the root DialogHost.
+            </TextBlock>
+            <StackPanel Grid.Row="2" Grid.Column="4">
+                <Button Margin="8" Click="OpenNoAnimationDialog">PASS VIEW</Button>
+                <Button Margin="8" Click="OpenDialogWithModel">PASS MODEL</Button>
+                <Button Margin="8" Click="CloseDialogWithModel">PASS CLOSE</Button>
+                <Button Margin="8" Click="OffDialogWithModel">PASS IsOpen=false</Button>
+                <Button Margin="8" Click="OnDialogWithModel">PASS IsOpen=true</Button>
+            </StackPanel>
+
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="6"
+                TextWrapping="Wrap">
+                SAMPLE 4: Dialog with blur.
+                Blur can be controlled via BlurBackground and BlurBackgroundRadius properties.
+            </TextBlock>
+            <Border
+                Grid.Row="2"
+                Grid.Column="6"
+                MinWidth="200"
+                MinHeight="200"
+                BorderBrush="Black"
+                BorderThickness="1">
+                <dialogHostAvalonia:DialogHost BlurBackground="True" Identifier="BlurDialogHost">
+                    <Panel>
+                        <TextBlock TextAlignment="Justify" TextWrapping="Wrap">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sed metus semper, faucibus erat ac, tincidunt odio. Donec congue nisi purus, non consectetur purus sollicitudin sed. Suspendisse iaculis dictum porttitor. Nulla ex leo, pulvinar venenatis arcu in, luctus efficitur nisl. Mauris non velit quis elit placerat auctor porttitor ac augue. Phasellus ut ipsum enim. Proin interdum aliquam ex sed laoreet. Sed eros nulla, ornare elementum urna vel, fringilla pharetra lorem. Integer hendrerit eros a tortor gravida, in lacinia augue blandit. Donec dignissim dapibus augue vel ultricies. Donec in velit mi. Pellentesque ac lorem vitae magna ullamcorper vehicula.</TextBlock>
+                        <Panel
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource SystemRegionBrush}">
+                            <Button Click="OpenBlurDialog">
+                                Open with blur
+                            </Button>
+                        </Panel>
+                    </Panel>
+                </dialogHostAvalonia:DialogHost>
+            </Border>
+        </Grid>
+    </dialogHostAvalonia:DialogHost>
 </Window>
