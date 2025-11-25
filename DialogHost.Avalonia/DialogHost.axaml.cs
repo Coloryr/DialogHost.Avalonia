@@ -538,6 +538,15 @@ public class DialogHost : ContentControl {
     ///  Close a modal dialog.
     /// </summary>
     /// <param name="dialogIdentifier"> of the instance where the dialog should be closed. Typically this will match an identifier set in XAML. </param>
+    /// <param name="content">the open content</param>
+    public static void CloseContent(string? dialogIdentifier, object? content) {
+        Close(dialogIdentifier, null, content);
+    }
+
+    /// <summary>
+    ///  Close a modal dialog.
+    /// </summary>
+    /// <param name="dialogIdentifier"> of the instance where the dialog should be closed. Typically this will match an identifier set in XAML. </param>
     /// <param name="parameter">to provide to close handler</param>
     /// <param name="content">the open content</param>
     public static void Close(string? dialogIdentifier, object? parameter, object? content) {
